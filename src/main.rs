@@ -13,9 +13,10 @@ use config::Config;
 use counter::Counter;
 use shoe::Shoe;
 use std::collections::BinaryHeap;
-use std::{env, process};
+use std::io::Write;
+use std::{env, fs::File, process};
 
-fn main() {
+fn main() -> std::io::Result<()> {
   // chap1::q1::is_all_unique("hahaha")
   // let closure = |num| println!("hahaha");
 
@@ -25,6 +26,7 @@ fn main() {
     process::exit(1);
   });
 
+  // open_da_file(&config.filename)?;
   println!("query: {}, filename: {}", config.query, config.filename);
 
   let mut heap = BinaryHeap::with_capacity(100);
@@ -60,4 +62,33 @@ fn main() {
   // for v in counter.iter() {
   //   println!("{}", v);
   // }
+  Ok(())
 }
+
+fn open_da_file_and_write(file_name: &String) -> std::io::Result<()> {
+  // Ok(match foo.bar() {
+  //   Ok(result) => result,
+  //   Err(err) => return Err(From::from(err)),
+  // })
+  let mut file = File::create(file_name)?;
+  file.write_all(b"hello world")
+  // .write_all(b"Hello world")
+  // File::create("haha.txt")?.write_all(b"Hello world");
+}
+
+mod cons;
+use cons::List::{Cons, Nil};
+
+fn list() {
+  let list = Cons(1, Box::new(Cons(2, Box::new(Cons(3, Box::new(Nil))))));
+}
+
+// fn open_da_file(file_name: &String) -> std::io::Result<()> {
+//   let h = "hello".to_owned();
+
+//   do {
+//     mut f <- File::create(file_name);
+//     s <- Ok(h + " world!");
+//     f.write_all(s)
+//   };
+// }

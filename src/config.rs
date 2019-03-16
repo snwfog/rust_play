@@ -31,6 +31,4 @@ impl Config {
   }
 }
 
-pub fn search(query: &str, contents: str) -> Vec<String> {
-
-}
+// pub fn search(query: &str, contents: str) -> Vec<String> {}
