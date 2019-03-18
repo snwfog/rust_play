@@ -1,6 +1,6 @@
 use rand::Rng;
 
-fn call_qsort() {
+pub fn call_qsort() {
   let mut rng = rand::thread_rng();
   let mut numbers = vec![0; 1_000_000];
   for i in 0..numbers.len() {

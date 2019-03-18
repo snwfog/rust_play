@@ -1,37 +1,54 @@
-extern crate rayon;
-
-mod chap1;
-mod config;
-mod counter;
-mod qsort;
-mod ref_cell;
-mod shoe;
-
 // use std::io;
 // use std::cmp::Ordering;
 // use rand::Rng;
-use config::Config;
-use counter::Counter;
-use shoe::Shoe;
+mod qsort;
+
 use std::collections::BinaryHeap;
 use std::io::Write;
+use std::rc::Rc;
+use std::sync::mpsc;
+use std::sync::{Arc, Mutex};
 use std::thread;
+use std::thread::Result;
 use std::time::Duration;
 use std::{env, fs::File, process};
 
 fn main() {
-  thread::spawn(|| {
-    for i in 1..10 {
-      println!("number from thread {}", i);
-      thread::sleep(Duration::from_millis(1));
-    }
-  });
+  qsort::call_qsort();
 
-  for i in 1..5 {
-    println!("number from main {}", i);
-    thread::sleep(Duration::from_millis(3));
+  let counter = Arc::new(Mutex::new(0));
+  let mut handles = vec![];
+  for _ in 0..10 {
+    let counter = Arc::clone(&counter);
+    println!("{:?}", counter);
+    let handle = thread::spawn(move || {
+      let mut num = counter.lock().unwrap();
+      *num += 1;
+    });
+
+    handles.push(handle);
   }
+
+  for h in handles {
+    h.join().unwrap();
+  }
+
+  println!("result: {}", *counter.lock().unwrap());
 }
+
+// fn main() {
+//   let (tx, rx) = mpsc::channel();
+
+//   let handle = thread::spawn(move || {
+//     let val = String::from("hi");
+//     tx.send(val).unwrap();
+//   });
+
+//   let received = rx.recv().unwrap();
+//   println!("received {}", received);
+
+//   handle.join().unwrap();
+// }
 
 // fn main() -> std::io::Result<()> {
 //   // chap1::q1::is_all_unique("hahaha")
